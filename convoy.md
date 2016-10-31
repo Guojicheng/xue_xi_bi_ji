@@ -44,9 +44,17 @@
 
 `ae1abd39-7ebf-494b-a74f-2898604baad3`
 
+`~]$ # start a container and mount the recovered convoy volume`
 
+`[yasker@yasker-vm2 ~]$ sudo docker run -it -v vol1:/vol1 --volume-driver=convoy ubuntu`
+
+`root@210809eb6d68:/# # check that /vol1/foo is recovered`
+
+`root@210809eb6d68:/# ls /vol1/foo`
+
+`/vol1/foo`
+
+`root@210809eb6d68:/#`
 
 ---
-
-
 
