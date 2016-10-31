@@ -1,4 +1,4 @@
-Convoy-nfs 操作实例
+# Convoy-nfs 操作实例
 
 `bash-3.2$ # login to first host`
 
@@ -60,23 +60,19 @@ Convoy-nfs 操作实例
 
 ---
 
+# 使用Convoy-NFS构建共享卷
 
-
-
-
-使用Convoy-NFS构建共享卷
-
-Introduction
+## Introduction
 
 如果你用过Docker你就会知道，共享卷和跨主机的数据访问是个非常棘手的问题。虽然Docker的生态系统在逐渐走向成熟，但对大多数人来说，在不同环境中实现持久化存储还是很麻烦的。幸运的是，Rancher一直在研究这件事，并且想出了一个能独特的、能解决大部分这个问题的方案。用共享存储运行数据库的方法仍没有被广泛推荐，但对于许多其他的情况，跨主机共享卷倒是一个很好的做法。
 
 这个指南中的大部分内容是受Rancher的一个线上Meetup的启发。另外，如果你想自己从头开始搭建Convoy-NFS，这个网页上有一些有关NFS配置的信息，你也许能作为参考。
 
-Rancher Convoy
+## Rancher Convoy
 
 如果你以前没有听说过Rancher的Convoy项目，这里可以先简单介绍一下。Rancher希望可以通过Convoy项目让持久化容量存储变得简单方便。Convoy是一个非常棒的磁盘插件，因为它为用户提供了多种不同的选择。例如EBS卷和S3的支持，与VFS\/NFS一起，为用户提供了一些用于配置共享存储的厉害并且灵活的选择。
 
-Dockerized-NFS
+## Dockerized-NFS
 
 这里有一个小秘诀，教你怎样启动一个能和Convoy-NFS服务连接起来的Docker化的NFS服务器。Docker-NFS基本上是一个穷人的EFS。如果你想运行它，你必须有足够的信心，相信服务器不会被毁，或相信你的数据无足轻重，即使丢失了也无所谓。你可以在这里找到更多我过去使用的Docker NFS服务器的信息。
 
@@ -88,17 +84,18 @@ Dockerized-NFS
 
 docker-nfs:
 
- image: cpuguy83\/nfs-server
+image: cpuguy83\/nfs-server
 
- privileged: true
+privileged: true
 
- volumes:
+volumes:
 
- - \/exports
+* \/exports
 
- command:
+  command:
 
- - \/exports
+* \/exports
+
 
 在采用这个容器化的NFS服务器的方法时你可能会碰到的一个疑难杂症是，你的主机要么没有安装NFS内核模块，要么没有打开伴随的服务。
 
@@ -110,7 +107,7 @@ sudo apt-get install nfs-kernel-server
 
 sudo systemctl start rpc-mountd
 
-配置EFS
+## 配置EFS
 
 配置EFS是很容易的。用上面提到过的链接，你可以了解到创建一个能与Convoy连接的EFS卷的全部步骤。创建EFS卷时，你可以注意一下EFS share的IP地址，或者如果你在创建卷之后展开到配置中，那就注意一下AWS为share提供的DNS名。
 
@@ -118,7 +115,7 @@ sudo systemctl start rpc-mountd
 
 这里写图片描述
 
-Convoy-NFS
+## Convoy-NFS
 
 目前，Rancher还提供另外一种名叫“Convoy-NFS”的应用服务目录项，来将容器连接到NFS Server上：
 
@@ -152,11 +149,11 @@ tty: true
 
 volumes:
 
-- test\_volume:\/data
+* test\_volume:\/data
 
 command:
 
-- bash
+* bash
 
 一个新的卷会在Storage Pools页面上弹出来：
 
