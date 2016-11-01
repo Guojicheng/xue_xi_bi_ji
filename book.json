@@ -3,5 +3,12 @@
         "betterchinese",
         "download-pdf",
         "pyweb"
-    ]
+    ],
+    "pluginsConfig": {
+        "download-pdf": {
+            "base": "aaaapdf",
+            "label": "Download PDF",
+            "multilingual": false
+        }
+    }
 }
