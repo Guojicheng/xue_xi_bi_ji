@@ -1,4 +1,4 @@
-Hussein Galal on Jan 26, 2016
+
 
 Recently Rancher introduced the Rancher catalog, an awesome feature that enables Rancher users to one-click deploy common applications and complex services from catalog templates on your infrastructure, and Rancher will take care of creating and orchestrating the Docker containers for you.
 
