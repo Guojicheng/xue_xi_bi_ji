@@ -27,3 +27,34 @@ Logstash 社区通常习惯用 _shipper_，_broker_ 和 _indexer_ 来描述数�
 
 [ELASTIC 官网](https://www.elastic.co/ "官网")   https:\/\/www.elastic.co\/
 
+### 部署logstash 
+
+```
+rpm --import http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+cat > /etc/yum.repos.d/logstash.repo <<EOF
+[logstash-5.0]
+name=logstash repository for 5.0.x packages
+baseurl=http://packages.elasticsearch.org/logstash/5.0/centos
+gpgcheck=1
+gpgkey=http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+enabled=1
+EOF
+yum clean all
+yum install logstash
+
+```
+
+```
+ bin/logstash -e 'input{stdin{}}output{stdout{codec=>rubydebug}}'
+```
+
+测试命令解释：
+
+ 此命令启动logstash ， 之后你输入hello word  ， 但看输出
+
+![](/assets/logstash1.png)
+
+
+
+
+
