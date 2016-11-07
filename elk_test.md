@@ -29,7 +29,10 @@ Logstash 社区通常习惯用 _shipper_，_broker_ 和 _indexer_ 来描述数�
 
 ### 部署logstash
 
+#### 安装脚本
+
 ```
+#！/bin/bash
 rpm --import http://packages.elasticsearch.org/GPG-KEY-elasticsearch
 cat > /etc/yum.repos.d/logstash.repo <<EOF
 [logstash-5.0]
@@ -41,24 +44,27 @@ enabled=1
 EOF
 yum clean all
 yum install logstash
-
 ```
+
+####  测试指令1
 
 ```
  bin/logstash -e 'input{stdin{}}output{stdout{codec=>rubydebug}}'
 ```
 
-测试命令解释：
-
 此命令启动logstash ， 之后你输入hello word  ， 但看输出
 
-
-
-
-
-
-
 ![](/assets/logstash1.png)
+
+#### 检查命令2  
+
+ top   输入Ｈ　查看进程
+
+![](/assets/logstash2.png)
+
+_小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫xx，过滤的叫\|xx_
+
+
 
 
 
