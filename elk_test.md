@@ -17,13 +17,13 @@
 
 ## 第一章  整理elk在Rancher 平台的部署策略
 
-  ![](/assets/logstash-arch.jpg)
+![](/assets/logstash-arch.jpg)
 
-Logstash 社区通常习惯用 _shipper_，_broker_ 和 _indexer_ 来描述数据流中不同进程各自的角色。如下图： 
+Logstash 社区通常习惯用 _shipper_，_broker_ 和 _indexer_ 来描述数据流中不同进程各自的角色。如下图：
 
 [logstash 中文手册](http://www.kancloud.cn/hanxt/elk/155902 "中文手册")   http:\/\/www.kancloud.cn\/hanxt\/elk\/155902
 
 [Rancher 官网资源](http://rancher.com/running-our-own-elk-stack-with-docker-and-rancher/ "实践1 ") http:\/\/rancher.com\/running-our-own-elk-stack-with-docker-and-rancher\/
 
-
+[ELASTIC 官网](https://www.elastic.co/ "官网")   https:\/\/www.elastic.co\/
 
