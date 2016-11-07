@@ -27,7 +27,7 @@ Logstash 社区通常习惯用 _shipper_，_broker_ 和 _indexer_ 来描述数�
 
 [ELASTIC 官网](https://www.elastic.co/ "官网")   https:\/\/www.elastic.co\/
 
-### 部署logstash 
+### 部署logstash
 
 ```
 rpm --import http://packages.elasticsearch.org/GPG-KEY-elasticsearch
@@ -50,7 +50,13 @@ yum install logstash
 
 测试命令解释：
 
- 此命令启动logstash ， 之后你输入hello word  ， 但看输出
+此命令启动logstash ， 之后你输入hello word  ， 但看输出
+
+
+
+
+
+
 
 ![](/assets/logstash1.png)
 
