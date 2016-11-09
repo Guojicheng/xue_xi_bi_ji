@@ -46,7 +46,7 @@ yum clean all
 yum install logstash
 ```
 
-####  测试指令1
+#### 测试指令1
 
 ```
  bin/logstash -e 'input{stdin{}}output{stdout{codec=>rubydebug}}'
@@ -56,15 +56,13 @@ yum install logstash
 
 ![](/assets/logstash1.png)
 
-#### 检查命令2  
+#### 检查命令2
 
- top   输入Ｈ　查看进程
+top   输入Ｈ　查看进程
 
 ![](/assets/logstash2.png)
 
 _小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫xx，过滤的叫\|xx_
-
-
 
 
 
