@@ -64,8 +64,6 @@ top   输入Ｈ　查看进程
 
 _小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫xx，过滤的叫\|xx_
 
-
-
 #### 插件安装
 
 ##### 获取插件地址 https:\/\/github.com\/logstash-plugins
@@ -84,7 +82,7 @@ _小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫x
 
 ##### 更换淘宝源  https:\/\/ruby.taobao.org
 
-`yum install -y gem `
+`yum install -y gem`
 
 `gem sources --remove http://rubygems.org/`
 
@@ -92,15 +90,7 @@ _小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫x
 
 `gem sources -l`
 
-
-
-
-
-
-
-
-
-
+#### 管道设计原理
 
 
 
