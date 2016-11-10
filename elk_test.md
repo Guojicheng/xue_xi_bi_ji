@@ -66,5 +66,41 @@ _小贴士：logstash 很温馨的给每个线程都取了名字，输入的叫x
 
 
 
+#### 插件安装
+
+##### 获取插件地址 https:\/\/github.com\/logstash-plugins
+
+```
+在线安装  /plugin install logstash-pluinput-jdbc
+```
+
+```
+升级插件 /plugin update logstash-input-jdbc
+```
+
+```
+ 卸载插件 /plugin uninstall logstash-input-jdbc
+```
+
+##### 更换淘宝源  https:\/\/ruby.taobao.org
+
+`yum install -y gem `
+
+`gem sources --remove http://rubygems.org/`
+
+`gem sources -a https://ruby.taobao.org/`
+
+`gem sources -l`
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -9,4 +9,5 @@
 * [学习资源链接](学习资源链接.md)
 * [elk test](elk_test.md)
     * [elk test](elk-test.md)
+* [wisebuild test](wisebuild-test.md)
 
