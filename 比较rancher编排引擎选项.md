@@ -248,5 +248,5 @@ Docker Native给你提供了最快的升级，很少甚至没有对Docker的依�
 另一个问题是规模：Kubernetes已经测试了数千个节点，而Mesos已经测试了成千上万的节点。如果您正在启动具有数万个节点的集群，则需要使用Mesos来获得底层基础架构的可扩展性 - 但请注意，将高级功能（例如负载平衡）扩展到该范围仍将保留。然而，在那个规模，很少有现成的解决方案，如果有的话它也需要不断仔细调整及不断的改造。
 
 Usman是一名服务器和基础设施工程师，具有在各种云平台之上构建大规模分布式服务的经验。你可以阅读更多他的工作
-原文地址：http:\/\/rancher.com\/comparing-rancher-orchestration-engine-options\/
+原文地址：`http://rancher.com/comparing-rancher-orchestration-engine-options/`
 
