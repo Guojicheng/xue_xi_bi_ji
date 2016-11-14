@@ -13,5 +13,5 @@
 * [微服务部署的挑战](微服务部署的挑战.md)
 * [比较四个托管的Docker注册中心](比较四个托管的docker注册中心.md)
 * [比较Rancher编排引擎选项](比较rancher编排引擎选项.md)
-    * translate
+    * [translate](translate.md)
 

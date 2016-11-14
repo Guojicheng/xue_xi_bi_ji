@@ -92,7 +92,7 @@ Docke 支持使用卷驱动\( volume drivers \)程序支持持久性外部卷，
 
 ### 可用性
 
-从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 建立从无到有Kubernetes的详情，可浏览[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://kubernetes.io/docs/getting-started-guides&usg=ALkJrhids-djxUziO8986Mcc3mU5Tkk3Ww)（[http:\/\/kubernetes.io\/docs\/getting-started-guides\/](http://kubernetes.io/docs/getting-started-guides/)），但幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何设置一个[Kubernetes集群。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) \)
+从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 建立从无到有Kubernetes的详情，可浏览（[http:\/\/kubernetes.io\/docs\/getting-started-guides\/](http://kubernetes.io/docs/getting-started-guides/)），但幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何设置一个[Kubernetes集群。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) \)
 
 除了初始设置，Kubernetes仍然有一些陡峭的学习曲线，因为它使用自己的术语和概念。Kubernetes使用资源类型，如Pods，Deployments,Replication Controllers，Services，Daemon sets等来定义部署。 这些概念不是Docker术语词典的一部分，因此您需要在开始创建第一个部署之前熟悉它们。 此外，一些概念与Docker冲突， 例如Kubernetes Services 概念上并不等同于Docker Services ，（Docker Services更贴近地映射到Kubernetes世界中的Deployments）。 此外，您使用kubectl而不是docker CLI与来用于群集交互，您必须使用Kubernetes配置文件，而不是docker compose文件。
 
@@ -179,6 +179,7 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 ```
 
 一个略微更完整的版本如下所示，我们现在添加端口映射和健康检查。 在端口映射中，我们指定一个容器端口，这是docker容器公开的端口。 主机端口定义主机公共接口上的哪个端口映射到容器端口。 如果为主机端口指定0，则在运行时分配随机端口。 类似地，我们可以可选地指定服务端口。服务端口用于服务发现和负载平衡，如本节后面所述。 使用健康检查，我们现在既可以做滚动（默认）和蓝绿色的部署
+
 ```
 {
   "id": "MyService"
@@ -230,7 +231,6 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 }
 ```
 
-
 在定义基本的服务之外，马拉松 （Marathon ）还可以做基于指定容器的约束条件调度，详见[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/constraints.html&usg=ALkJrhiRCoWI_pzeza9W5vjrJCNkNFVKPw)，包括指定该服务的每个实例必须在不同的物理主机 _“constraints”: \[\[“hostname”, “UNIQUE”\]\]._您可以使用_的CPU_和_mem_标签指定容器的资源利用率。每个Mesos代理报告其总资源可用性，因此调度程序可以以智能方式在主机上放置工作负载。
 
 默认情况下，Mesos依赖于传统的Docker端口映射和外部服务发现和负载均衡机制。 然而，最近的测试版功能添加了使用基于DNS服务发现支持[Mesos DNS](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://mesosphere.github.io/mesos-dns/&usg=ALkJrhjJryI9-VD4A5pRC4WHKK3bFPzU5A)或负载均衡使用[Marathon LB](https://github.com/mesosphere/marathon-lb)。 Mesos DNS是一个在Mesos之上运行的应用程序，它查询Mesos API以获取所有正在运行的任务和应用程序的列表。然后，它为运行这些任务的节点创建DNS记录。之后所有Mesos代理需要手动更新使用Mesos DNS服务作为其主DNS服务器。Mesos DNS使用主机名或IP地址用于Mesos agent向master主机注册，端口映射可以查询为SRV记录。Marathon DNS使用agent的主机名，并且必须确保主机网络相应端口打开且不能发生冲突。Mesos DNS确实提供了与众不同的方法来为状态负载持续引用，例如我们将能够使用Kubernetes pet sets。此外与Kubernetes有群集内任何容器可寻址的VIP机制不同，Mesos必须手动将\/etc\/resolve.conf更新到Mesos DNS服务器集，并在DNS服务器更改时更新配置。 Marathon-lb使用Marathon Event bus 跟踪所有服务的启动和撤销。然后，它在agent节点上启动HAProxy实例，以将流量中继到必需的服务节点。
@@ -247,6 +247,6 @@ Docker Native给你提供了最快的升级，很少甚至没有对Docker的依�
 
 另一个问题是规模：Kubernetes已经测试了数千个节点，而Mesos已经测试了成千上万的节点。如果您正在启动具有数万个节点的集群，则需要使用Mesos来获得底层基础架构的可扩展性 - 但请注意，将高级功能（例如负载平衡）扩展到该范围仍将保留。然而，在那个规模，很少有现成的解决方案，如果有的话它也需要不断仔细调整及不断的改造。
 
-_Usman是一名服务器和基础设施工程师，具有在各种云平台之上构建大规模分布式服务的经验。你可以阅读更多他的工作
+\_Usman是一名服务器和基础设施工程师，具有在各种云平台之上构建大规模分布式服务的经验。你可以阅读更多他的工作
 原文地址：http:\/\/rancher.com\/comparing-rancher-orchestration-engine-options\/
 
