@@ -92,7 +92,7 @@ Docke 支持使用卷驱动\( volume drivers \)程序支持持久性外部卷，
 
 ### 可用性
 
-从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 从基础开始建立Kubernetes的详情，可浏览[这里](http://kubernetes.io/docs/getting-started-guides/)，但幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何在Rancher设置[kubernetes](http://rancher.com/getting-micro-services-production-kubernetes/)[。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) \)
+从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 从基础开始建立Kubernetes的详情，可浏览[这里](http://kubernetes.io/docs/getting-started-guides/)，幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何在Rancher设置[kubernetes](http://rancher.com/getting-micro-services-production-kubernetes/)[。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) \)
 
 除了初始设置，Kubernetes仍然有一些陡峭的学习曲线，因为它使用自己的术语和概念。Kubernetes使用资源类型，如Pods，Deployments,Replication Controllers，Services，Daemon sets等来定义部署。 这些概念不是Docker术语词典的一部分，因此您需要在开始创建第一个部署之前熟悉它们。 此外，一些概念与Docker冲突， 例如Kubernetes Services 概念上并不等同于Docker Services ，（Docker Services更贴近地映射到Kubernetes世界中的Deployments）。 此外，您使用kubectl而不是docker CLI与来用于群集交互，您必须使用Kubernetes配置文件，而不是docker compose文件。
 
