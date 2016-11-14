@@ -165,7 +165,17 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 要在Marathon中定义服务，您需要使用其内部JSON格式，如下所示。 一个简单的定义，如下面的一个将创建一个服务，运行nginx容器的两个实例。
 
 ```
-
+{
+  "id": "MyService"
+  "instances": 2,
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "network": "BRIDGE",
+      "image": "nginx:latest"
+    }
+  }
+}
 ```
 
 
