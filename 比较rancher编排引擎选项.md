@@ -6,7 +6,7 @@ Docker Native Orchestration目前是相对来说项目较新，但它成长速�
 
 Kubernetes是当今最广泛使用的容器编排系统之一，并且得到了Google的支持。
 
-最后Mesos与Mesosphere（或Marathon，其开放源代码版本）支持分层、分类的服务管理方法，许多管理功能可基于独立的插件和应用程序。 因为架构的灵活性这使得它更容易深度定制化部署。当然，这也意味着需要更多的整合工作量。而Kubernetes的常见案例则更偏向于如何构建集群和交付完整统一的综合系统。
+最后Mesos与Mesosphere（或Marathon，其开放源代码版本）支持分层、分类的服务管理方法，许多管理功能可基于独立的插件和应用程序。 因为架构的灵活性这使得它更容易深度定制化部署。当然，这也意味着需要更多的整合工作量。而Kubernetes的常见案例则更偏向于如何构建集群和交付完整统一的综合系统 。
 
 ## Docker Native Orchestration
 
