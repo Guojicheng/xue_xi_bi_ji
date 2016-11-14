@@ -208,6 +208,29 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 
 在单一服务之外，您还可以定义 马拉松 \\(Marathon\\)应用程序组\\( Application Groups \\)用于嵌套树结构的服务。在组中定义应用程序的好处是能够将整个组缩放在一起。这是非常有用的在微服务栈场景中因为单独去调整每个服务是相对困难的。到目前为止，进一步假设所有服务将以相同的速率扩展，如果您需要一个服务的“n”个实例，您将获得所有服务的“n”个实例
 
+```
+{
+  "id": "/product",
+  "groups": [
+    {
+      "id": "/product/database",
+      "apps": [
+         { "id": "/product/mongo", ... },
+         { "id": "/product/mysql", ... }
+       ]
+    },{
+      "id": "/product/service",
+      "dependencies": ["/product/database"],
+      "apps": [
+         { "id": "/product/rails-app", ... },
+         { "id": "/product/play-app", ... }
+      ]
+    }
+  ]
+}
+```
+
+
 在定义基本的服务之外，马拉松 （Marathon ）还可以做基于指定容器的约束条件调度，详见[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/constraints.html&usg=ALkJrhiRCoWI_pzeza9W5vjrJCNkNFVKPw)，包括指定该服务的每个实例必须在不同的物理主机 _“constraints”: \[\[“hostname”, “UNIQUE”\]\]._您可以使用_的CPU_和_mem_标签指定容器的资源利用率。每个Mesos代理报告其总资源可用性，因此调度程序可以以智能方式在主机上放置工作负载。
 
 默认情况下，Mesos依赖于传统的Docker端口映射和外部服务发现和负载均衡机制。 然而，最近的测试版功能添加了使用基于DNS服务发现支持[Mesos DNS](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://mesosphere.github.io/mesos-dns/&usg=ALkJrhjJryI9-VD4A5pRC4WHKK3bFPzU5A)或负载均衡使用[Marathon LB](https://github.com/mesosphere/marathon-lb)。 Mesos DNS是一个在Mesos之上运行的应用程序，它查询Mesos API以获取所有正在运行的任务和应用程序的列表。然后，它为运行这些任务的节点创建DNS记录。之后所有Mesos代理需要手动更新使用Mesos DNS服务作为其主DNS服务器。Mesos DNS使用主机名或IP地址用于Mesos agent向master主机注册，端口映射可以查询为SRV记录。Marathon DNS使用agent的主机名，并且必须确保主机网络相应端口打开且不能发生冲突。Mesos DNS确实提供了与众不同的方法来为状态负载持续引用，例如我们将能够使用Kubernetes pet sets。此外与Kubernetes有群集内任何容器可寻址的VIP机制不同，Mesos必须手动将\/etc\/resolve.conf更新到Mesos DNS服务器集，并在DNS服务器更改时更新配置。 Marathon-lb使用Marathon Event bus 跟踪所有服务的启动和撤销。然后，它在agent节点上启动HAProxy实例，以将流量中继到必需的服务节点。
