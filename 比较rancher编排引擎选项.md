@@ -50,7 +50,12 @@ docker service create                        \
 
 此外，您可以使用 reserve CPU 和reserve memory标记来定义服务中的每个容器使用的资源量，以便在群集上启动多个服务时，以最小化资源争用放置容器（译者按：容器会被部署到最适合它们的位置，最少的容器运行，最多的CPU或者内存可用，等等\)。
 
-` backend2: 192.168.99.104:2376 \````  Containers 5 \ ````  Reserved CPUs 0/1 \ ````  Reserved Memory 0 B / 1.021 GiB \ ````  -abels model=large-disk, provider=virtualbox, public=no, storagedriver=aufs \ ````  -p 80:80/tcp nginx:other-version.`
+```
+ --limit-cpu value Limit CPUs (default 0.000)             \ 
+ --limit-memory value Limit Memory (default 0 B)          \
+ --reserve-cpu value Reserve CPUs (default 0.000)         \
+ --reserve-memory value Reserve Memory (default 0 B) 
+```
 
 您可以使用以下命令进行基本的滚动部署。这将更新服务的容器镜像，但这样做，每次2个容器，每两组之间有10s的间隔。但是不支持运行状况检查和自动回滚。
 
@@ -62,14 +67,14 @@ docker service update        \
    --update-delay 10s        \
    --update-parallelism 2    \
    -p 80:80/tcp nginx:other-version.
- 
+
 ```
 
 Docke 支持使用卷驱动\( volume drivers \)程序支持持久性外部卷，并且使用Native orchestration 为其service create命令扩展支持了使用mount选项。 将以下代码段添加到上面的命令将会将NFS挂载到您的容器中。请注意这需要在Docker外部的主机上已经设置好NFS，一些其他驱动程序添加了对Amazon EBS卷驱动程序或Google容器引擎卷驱动程序的支持能够在不需要主机支持的情况下工作。 此外，这个功能还没有很好的文档，可能需要一些测试并参考github issue以在docker项目得到运行。
 
 ```
  --mount type=volume,src=/path/on/host,volume-driver=local,\
-    dst=/path/in/container,volume-opt=type=nfs,\
+    dst=/path/in/container,volume-opt=type=nfs,\
     volume-opt=device=192.168.1.1:/your/nfs/path
 ```
 
@@ -87,9 +92,9 @@ Docke 支持使用卷驱动\( volume drivers \)程序支持持久性外部卷，
 
 ### 可用性
 
-从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 建立从无到有Kubernetes的详情，可浏览[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://kubernetes.io/docs/getting-started-guides&usg=ALkJrhids-djxUziO8986Mcc3mU5Tkk3Ww)（[http:\/\/kubernetes.io\/docs\/getting-started-guides\/](http://kubernetes.io/docs/getting-started-guides/)），但幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何设置一个[Kubernetes集群。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) )
+从头开始设置Kubernetes是一个困难的过程，因为它需要设置etcd，网络插件，DNS服务器和证书颁发机构。 建立从无到有Kubernetes的详情，可浏览[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://kubernetes.io/docs/getting-started-guides&usg=ALkJrhids-djxUziO8986Mcc3mU5Tkk3Ww)（[http:\/\/kubernetes.io\/docs\/getting-started-guides\/](http://kubernetes.io/docs/getting-started-guides/)），但幸运的是Rancher已经做好这一切的设置。以前的文章中我们已经介绍了如何设置一个[Kubernetes集群。](/(https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://rancher.com/getting-micro-services-production-kubernetes/&usg=ALkJrhjVdnTruq4yb74KidfZqGr9syA5kw) \)
 
- 除了初始设置，Kubernetes仍然有一些陡峭的学习曲线，因为它使用自己的术语和概念。Kubernetes使用资源类型，如Pods，Deployments,Replication Controllers，Services，Daemon sets等来定义部署。 这些概念不是Docker术语词典的一部分，因此您需要在开始创建第一个部署之前熟悉它们。 此外，一些概念与Docker冲突， 例如Kubernetes Services 概念上并不等同于Docker Services ，（Docker Services更贴近地映射到Kubernetes世界中的Deployments）。 此外，您使用kubectl而不是docker CLI与来用于群集交互，您必须使用Kubernetes配置文件，而不是docker compose文件。 
+除了初始设置，Kubernetes仍然有一些陡峭的学习曲线，因为它使用自己的术语和概念。Kubernetes使用资源类型，如Pods，Deployments,Replication Controllers，Services，Daemon sets等来定义部署。 这些概念不是Docker术语词典的一部分，因此您需要在开始创建第一个部署之前熟悉它们。 此外，一些概念与Docker冲突， 例如Kubernetes Services 概念上并不等同于Docker Services ，（Docker Services更贴近地映射到Kubernetes世界中的Deployments）。 此外，您使用kubectl而不是docker CLI与来用于群集交互，您必须使用Kubernetes配置文件，而不是docker compose文件。
 
 Kubernetes有这样一套独立于核心Docker的概念本身并不是一件坏事。 Kubernetes提供比核心Docker更丰富的功能集。 然而，Docker将添加更多的功能来与Kubernetes竞争，它们将具有不同的实现方式或冲突的概念。这将肯定重现象CoreOS与rkt之间这种类似但竞争的解决方案情况， 今天，Docker Swarm和Kubernetes的目标是非常不同的用例（Kubernetes更适合于使用于有专门的集群管理团队的面向服务的架构的大型生产部署），然而随着Docker Native Orchestration的成熟，它也舞台同台竞争。
 
@@ -114,19 +119,19 @@ spec:
 ```
 kind: Deployment
 metadata:
-  name: mywebservice-deployment
+  name: mywebservice-deployment
 spec:
-  replicas: 2 # We want two pods for this deployment
-  template:
-    metadata:
-      labels:
-        app: mywebservice
-    spec:
-      containers:
-      - name: web-1-10
-        image: nginx:1.10
-        ports:
-        - containerPort: 80
+  replicas: 2 # We want two pods for this deployment
+  template:
+    metadata:
+      labels:
+        app: mywebservice
+    spec:
+      containers:
+      - name: web-1-10
+        image: nginx:1.10
+        ports:
+        - containerPort: 80
 ```
 
 接下来它为部署提供简单的负载平衡。 部署中的所有pod将在服务进入和退出时注册到服务，服务也抽象出多个Deployment，因此如果您想运行滚动部署，您将使用相同的服务注册两个Kubernetes Deployment，然后逐步将pod添加到一个同时从其他Deployment减少pod。 您甚至可以进行蓝绿部署，在那里您可以一次性将服务指向新的Kubernetes Deployment。 最后，服务对您的Kubernetes集群中的服务发现也很有用，集群中的所有服务都获得VIP，并且作为docker link 风格的环境变量很好的集成的DNS服务器暴露给集群中的所有pod。
@@ -145,5 +150,53 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 
 ## 马拉松（Marathon）
 
+![](/assets/Marathon.png)
 
+### 基本结构
+
+大规模集群的另一个常见的编排设置选择是在Apache Mesos之上运行Marathon。Mesos是一个开源集群管理系统，支持各种各样主机上的工作负载。Mesos在群集中的每个主机上运行的Mesos代理，向master主机报告其可用资源。 Mesos 利用多台 Mesos master 来实现高可用性（high-availability），包括一个活跃的 master （译者按：叫做 leader 或者 leading master）和若干备份 master 来避免宕机。 通过 Apache ZooKeeper 选举出活跃的 leader，然后通知集群中的其他节点，包括其他Master，slave节点和调度器（scheduler driver）。在任何时间，master节点之一使用主选举过程是活动着的。master可以向任何Mesos agent发出任务，并报告这些任务的状态。虽然您可以通过API发出任务，但正常的方法是在Mesos之上使用一个framework框架。Marathon就是一个这样的framework框架，它为运行Docker容器（以及本地Mesos容器）提供支持。
+
+### 可用性
+
+与Swarm相比，Marathon有一个相当陡峭的学习曲线，因为它不与Docker分享大部分概念和术语。然而，马拉松（ Marathon ）功能并不丰富，因此比起Kubernetes更容易学习。管理Marathon部署的复杂性主要来自于它是架构在Mesos之上的事实，因此有两层工具要管理。此外， 马拉松 \(Marathon\)的一些更高级功能（如负载平衡）仅支持在Marathon之上运行的附加框架提供。 某些功能（如身份验证）只有在DC\/OS上运行Marathon时才可用，而后者又在Mesos上运行 - 这为堆栈添加另一层抽象。
+
+### 功能集
+
+要在Marathon中定义服务，您需要使用其内部JSON格式，如下所示。 一个简单的定义，如下面的一个将创建一个服务，运行nginx容器的两个实例。
+
+```
+
+```
+
+一个略微更完整的版本如下所示，我们现在添加端口映射和健康检查。 在端口映射中，我们指定一个容器端口，这是docker容器公开的端口。 主机端口定义主机公共接口上的哪个端口映射到容器端口。 如果为主机端口指定0，则在运行时分配随机端口。 类似地，我们可以可选地指定服务端口。服务端口用于服务发现和负载平衡，如本节后面所述。 使用健康检查，我们现在既可以做滚动（默认）和[蓝绿色的部署](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/blue-green-deploy.html&usg=ALkJrhi4ozsKQi8kcrvE36Hk9lQExM7e6w)。
+
+```
+
+```
+
+在单一服务之外，您还可以定义 马拉松 \(Marathon\)应用程序组\( Application Groups \)用于嵌套树结构的服务。在组中定义应用程序的好处是能够将整个组缩放在一起。这是非常有用的在微服务栈场景中因为单独去调整每个服务是相对困难的。到目前为止，进一步假设所有服务将以相同的速率扩展，如果您需要一个服务的“n”个实例，您将获得所有服务的“n”个实例。
+
+```
+
+```
+
+在定义基本的服务之外，马拉松 （Marathon ）还可以做基于指定容器的约束条件调度，详见[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/constraints.html&usg=ALkJrhiRCoWI_pzeza9W5vjrJCNkNFVKPw)，包括指定该服务的每个实例必须在不同的物理主机 _“constraints”: \[\[“hostname”, “UNIQUE”\]\]._您可以使用_的CPU_和_mem_标签指定容器的资源利用率。每个Mesos代理报告其总资源可用性，因此调度程序可以以智能方式在主机上放置工作负载。
+
+默认情况下，Mesos依赖于传统的Docker端口映射和外部服务发现和负载均衡机制。 然而，最近的测试版功能添加了使用基于DNS服务发现支持[Mesos DNS](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://mesosphere.github.io/mesos-dns/&usg=ALkJrhjJryI9-VD4A5pRC4WHKK3bFPzU5A)或负载均衡使用[Marathon LB](https://github.com/mesosphere/marathon-lb)。 Mesos DNS是一个在Mesos之上运行的应用程序，它查询Mesos API以获取所有正在运行的任务和应用程序的列表。然后，它为运行这些任务的节点创建DNS记录。之后所有Mesos代理需要手动更新使用Mesos DNS服务作为其主DNS服务器。Mesos DNS使用主机名或IP地址用于Mesos agent向master主机注册，端口映射可以查询为SRV记录。Marathon DNS使用agent的主机名，并且必须确保主机网络相应端口打开且不能发生冲突。Mesos DNS确实提供了与众不同的方法来为状态负载持续引用，例如我们将能够使用Kubernetes pet sets。此外与Kubernetes有群集内任何容器可寻址的VIP机制不同，Mesos必须手动将\/etc\/resolve.conf更新到Mesos DNS服务器集，并在DNS服务器更改时更新配置。 Marathon-lb使用Marathon Event bus 跟踪所有服务的启动和撤销。然后，它在agent节点上启动HAProxy实例，以将流量中继到必需的服务节点。
+
+马拉松（Marathon）的测试版支持[持久卷，](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/persistent-volumes.html&usg=ALkJrhhVPrswjgn73Z0dRgQI1pjxPoNTXQ)以外部持久性卷（[external persistent volumes](https://mesosphere.github.io/marathon/docs/external-volumes.html)） 。然而，这两个特征都处于非常原始的状态。持久卷只支持容器在单个节点上重新启动时支持持久化数据卷，但是会删除卷如果删除使用它们的应用，虽然磁盘上的实际数据不会被删除，volume必须手动删除。外部持久性卷的支持则限制在需要DC\/OS之上，并且当前只允许您的服务扩展到单个实例。
+
+## 最终结论
+
+现在我们看了Docker容器编排的三个选项：Docker Native（Swarm），Kubernetes和Mesos\/Marathon。很难选择一个系统来推荐，因为最好的系统高度依赖于你的具体用例需求，部署规模和应用历史。此外，所有三个系统现在还都在大量开发中，上面总结的一些功能是包括了测试版本，可能会很快更改，删除或被替换。
+
+Docker Native给你提供了最快的升级，很少甚至没有对Docker的依赖之外的供应商锁定问题。对Docker的依赖不是一个大问题，因为它已经成为了事实上的容器标准。鉴于在编排战争中缺乏明确的赢家，而且Docker本机是最灵活的方法，因此它是简单的Web及无状态应用程序的不错选择，但是，Docker Native目前是非常简单，如果你需要得到复杂的，大规模的应用程序到生产，你需要选择一个Mesos\/Marathon或Kubernetes。
+
+在Mesos\/Marathon和Kubernetes之间也不是一个容易的选择，因为两者都有自己的优点和缺点。在两者之中Kubernetes肯定是更丰富和成熟的，但它也是一个非常有固执的软件（译者按：Kubernetes有些固执己见对于容器如何组织和网络强制了一些概念）我们认为很多这些意见是有意义的。Kubernetes没有马拉松的灵活性，尤其当你考虑那些没有Docker，没有容器化的应用程序可以运行在Mesos（例如Hadoop集群）的丰富的历史。 如果你正在做一个绿色领域实施，也没有强烈的意见，如何布局集群，或你的意见偏向同意谷歌，那么Kubernetes是一个更好的选择。相反，如果你有大的，复杂的遗留工作负载，将逐渐转移到容器，那么Mesos\/Marathon是要走的路。
+
+另一个问题是规模：Kubernetes已经测试了数千个节点，而Mesos已经测试了成千上万的节点。如果您正在启动具有数万个节点的集群，则需要使用Mesos来获得底层基础架构的可扩展性 - 但请注意，将高级功能（例如负载平衡）扩展到该范围仍将保留。然而，在那个规模，很少有现成的解决方案，如果有的话它也需要不断仔细调整及不断的改造。
+
+_Usman是一名服务器和基础设施工程师，具有在各种云平台之上构建大规模分布式服务的经验。你可以阅读更多他的工作_[_techtraits.com_](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://techtraits.com/&usg=ALkJrhiSHm9owA1Z8ec1vOu2KYwaoX3rew)_ ，或者关注他的Twitter _[_@usman\_ismail_](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://twitter.com/usman_ismail&usg=ALkJrhgNloaKP-m6YyFTVSArO21NgygaMA)_或_[_GitHub上_](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://github.com/usmanismail&usg=ALkJrhgWPGdi9_qV-rxSHSqmt5D-t4n-wg)_ 。_
+
+原文地址：http:\/\/rancher.com\/comparing-rancher-orchestration-engine-options\/
 
