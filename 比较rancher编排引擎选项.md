@@ -14,11 +14,11 @@ Kubernetes是当今最广泛使用的容器编排系统之一，并且得到了G
 
 ### 基本结构
 
-Docker Engine 1.12 集成了原生的编排引擎，用以替换了之前独立的Docker Swarm项目。Docker原生集群（Swarm）同时包括了（Docker Engine \/ Daemons），这使原生docker可以任意充当集群的管理\(manager\)或工（worker\)节点角色。工作节点将负责执行任务，运行你启动的容器，而管理节点从用户那里获得任务说明，负责整合现有的集群，维护集群状态。​并且您可以有多个管理节点以支持高可用，但推荐的数量不超过七个。管理节点会保障集群内部环境状态的强一致性，以及基于 [Raft](https://raft.github.io) 协议实现状态备份 ，与所有一制性算法一样，拥有更多manager节点意味着更多的性能开销，同时在manager节点内部保持一致性表明Docker原生编排没有外部依赖性，集群管理更容易。
+Docker Engine 1.12 集成了原生的编排引擎，用以替换了之前独立的Docker Swarm项目。Docker原生集群（Swarm）同时包括了（Docker Engine \/ Daemons），这使原生docker可以任意充当集群的管理\(manager\)或工作（worker\)节点角色。工作节点 （worker\) 将负责执行运行你启动的容器任务，而管理节点从用户那里获得任务说明，负责整合现有的集群，维护集群状态。​并且您可以有推荐的数量不超过七个人管理节点以支持高可用。管理节点会保障集群内部环境状态的强一致性，它们基于 [Raft](https://raft.github.io) 协议实现状态一致及备份 ，与所有一制性算法一样，拥有更多manager管理节点（ manager ）意味着更多的性能开销，同时在manager节点内部保持一致性的事实让你在Docker原生编排没有外部依赖性，集群管理更容易。
 
 ### 可用性
 
-Docker将使用单节点Docker的概念扩展到Swarm集群。如果你熟悉docker那你学习swarm相当容易。你想要使docker节点环境到迁移到运行swarm集群群也相当简单，（译者按：如果现有系统使用Docker Engine，则可以平滑将Docker Engine切到Swarm上，无需改动现有系统。）你只需要在其中的一个docker节点运行使用 docker swarm init命令创建一个集群，在您要添加任何其他节点，使用，通过docker swarm join命令加入到刚才创建的集群中。之后您可以象在一个独立的docker环境下一样使用同样的Docker Compose的模板及相同的docker命令行工具。
+Docker将单节点Docker的使用概念扩展到Swarm集群。如果你熟悉docker那你学习swarm相当容易。你也可以相当简单将docker环境到迁移到运行swarm集群，（译者按：如果现有系统使用Docker Engine，则可以平滑将Docker Engine切到Swarm上，无需改动现有系统）。你只需要在其中的一个docker节点运行使用 docker swarm init命令创建一个集群，在您要添加任何其他节点，通过docker swarm join命令加入到刚才创建的集群中。之后您可以象在一个独立的docker环境下一样使用同样的Docker Compose的模板及相同的docker命令行工具。
 
 ### 功能集
 
