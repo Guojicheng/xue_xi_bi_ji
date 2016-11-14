@@ -22,9 +22,9 @@ Docker将单节点Docker的使用概念扩展到Swarm集群。如果你熟悉doc
 
 ### 功能集
 
-Docker Native Orchestration 使用与Docker Engine和Docker Compose来支持。您仍然可以使用象原先在单个节点一样的链接服务（link\)，创建卷\(volume\)和定义公开端口\(expose）功能。 除了这些，还有两个新的概念，服务（ services ）和网络（ networks ）。
+Docker Native Orchestration 使用与Docker Engine和Docker Compose来支持。您仍然可以使用象原先在单节点一样的链接（link\)，创建卷\(volume\)和定义公开端口\(expose）功能。 除了这些，还有两个新的概念，服务（ services ）和网络（ networks ）。
 
-docker服务是在您的节点上启动的一定数量的始终保持运行的一组容器，并且如果其中一个容器死了，它支持自动更换。有两种类型的服务，复制（replicated）或全局（global）。 复制（replicated）服务在集群中维护指定数量的容器（意味着这个服务可以随意 scale），全局（global）服务在每个群集节点上运行容器的一个实例（译者按：不多, 也不少）。 要创建复制（replicated）服务，请使用以下命令。
+docker services （服务）是管理在节点上启动的一定数量的始终保持运行的一组容器，并且如果其中一个容器死了，它支持自动更换。有两种类型的服务，复制（replicated）或全局（global）。 复制（replicated）服务在集群中维护指定数量的容器（意味着这个服务可以随意 scale），全局（global）服务在每个群集节点上运行容器的一个实例（译者按：不多, 也不少）。 要创建复制（replicated）服务，请使用以下命令。
 
 ```
 docker service create          \
@@ -36,7 +36,7 @@ docker service create          \
 
 您可以使用_docker network create–driver overlay NETWORK\_NAME 创建命名的overylay网络。_使用指定的overylay网络，您可以在你的容器内创建孤立（isolated）的，平面化的（flat），加密（encrypted）的跨节点的主机虚拟网络。
 
-你可以使用constraints加labels 来做一些非常基本的容器调度。 使用constraints 参数您可以向服务添加关联到具有指定标签的节点上启动容器。
+你可以使用constraints加labels 来做一些基础的容器调度工作。 使用constraints 参数您可以向服务添加关联有指定标签的节点上启动容器。
 
 ```
 docker service create                        \
