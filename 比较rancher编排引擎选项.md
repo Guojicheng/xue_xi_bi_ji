@@ -158,11 +158,11 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 
 ### 可用性
 
-与Swarm相比，Marathon有一个相当陡峭的学习曲线，因为它不与Docker分享大部分概念和术语。然而，马拉松（ Marathon ）功能并不丰富，因此比起Kubernetes更容易学习。管理Marathon部署的复杂性主要来自于它是架构在Mesos之上的事实，因此有两层工具要管理。此外， 马拉松 \(Marathon\)的一些更高级功能（如负载平衡）仅支持在Marathon之上运行的附加框架提供。 某些功能（如身份验证）只有在DC\/OS上运行Marathon时才可用，而后者又在Mesos上运行 - 这为堆栈添加另一层抽象。
+与Swarm相比，Marathon有一个相当陡峭的学习曲线，因为它不与Docker分享大部分概念和术语。然而，马拉松（ Marathon ）功能并不丰富，因此比起Kubernetes更容易学习。管理Marathon部署的复杂性主要来自于它是架构在Mesos之上的事实，因此有两层工具要管理。此外， 马拉松 \(Marathon\)的一些更高级功能（如负载平衡）仅支持在Marathon之上运行的附加框架提供。 某些功能（如身份验证）只有在DC\/OS上运行马拉松（Marathon时）才可使用，而后者又在Mesos上运行 - 这为堆栈添加另一层抽象。
 
 ### 功能集
 
-要在Marathon中定义服务，您需要使用其内部JSON格式，如下所示。 一个简单的定义，如下面的一个将创建一个服务，运行nginx容器的两个实例。
+要在Marathon中定义服务，您需要使用其内部JSON格式，如下所示。 一个简单的定义，如下面的一个将创建一个服务，运行两个nginx容器实例。
 
 ```
 {
@@ -178,7 +178,7 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 }
 ```
 
-一个略微更完整的版本如下所示，我们现在添加端口映射和健康检查。 在端口映射中，我们指定一个容器端口，这是docker容器公开的端口。 主机端口定义主机公共接口上的哪个端口映射到容器端口。 如果为主机端口指定0，则在运行时分配随机端口。 类似地，我们可以可选地指定服务端口。服务端口用于服务发现和负载平衡，如本节后面所述。 使用健康检查，我们现在既可以做滚动（默认）和蓝绿色的部署
+一个略微更完整些的版本如下所示，我们现在添加端口映射和健康检查。 在端口映射中，我们指定一个容器端口，这是docker容器公开的端口。 主机端口定义主机公共接口上的哪个端口映射到容器端口。 如果为主机端口指定0，则在运行时分配随机端口。 类似地，我们可以可选地指定服务端口。服务端口用于服务发现和负载平衡，如本节后面所述。 使用健康检查，我们现在既可以做滚动（默认）和[蓝绿部署](https://mesosphere.github.io/marathon/docs/blue-green-deploy.html)
 
 ```
 {
@@ -207,7 +207,7 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 }
 ```
 
-在单一服务之外，您还可以定义 马拉松 \\(Marathon\\)应用程序组\\( Application Groups \\)用于嵌套树结构的服务。在组中定义应用程序的好处是能够将整个组缩放在一起。这是非常有用的在微服务栈场景中因为单独去调整每个服务是相对困难的。到目前为止，进一步假设所有服务将以相同的速率扩展，如果您需要一个服务的“n”个实例，您将获得所有服务的“n”个实例
+在单一服务之外，您还可以定义马拉松 \(Marathon\)应用程序组\( Application Groups \)用于嵌套树结构的服务。在组中定义应用程序的好处是能够将整个组缩放在一起。这是非常有用的在微服务栈场景中因为单独去调整每个服务是相对困难的。到这一步，我们进一步假设所有服务将以相同的速率扩展，如果您需要一个服务的“n”个实例，您将获得所有服务的“n”个实例
 
 ```
 {
@@ -231,11 +231,11 @@ Kubernetes还在群集级别上提供了命名空间（[namespaces](http://kuber
 }
 ```
 
-在定义基本的服务之外，马拉松 （Marathon ）还可以做基于指定容器的约束条件调度，详见[这里](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/constraints.html&usg=ALkJrhiRCoWI_pzeza9W5vjrJCNkNFVKPw)，包括指定该服务的每个实例必须在不同的物理主机 _“constraints”: \[\[“hostname”, “UNIQUE”\]\]._您可以使用_的CPU_和_mem_标签指定容器的资源利用率。每个Mesos代理报告其总资源可用性，因此调度程序可以以智能方式在主机上放置工作负载。
+在定义基本的服务之外，马拉松 （Marathon ）还可以做基于指定容器的约束条件调度，详见[这里](https://mesosphere.github.io/marathon/docs/constraints.html)，包括指定该服务的每个实例必须在不同的物理主机 _“constraints”: \[\[“hostname”, “UNIQUE”\]\]._您可以使用_的CPU_和_mem_标签指定容器的资源利用率。每个Mesos代理报告其总资源可用性，因此调度程序可以以智能方式在主机上放置工作负载。
 
-默认情况下，Mesos依赖于传统的Docker端口映射和外部服务发现和负载均衡机制。 然而，最近的测试版功能添加了使用基于DNS服务发现支持[Mesos DNS](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=http://mesosphere.github.io/mesos-dns/&usg=ALkJrhjJryI9-VD4A5pRC4WHKK3bFPzU5A)或负载均衡使用[Marathon LB](https://github.com/mesosphere/marathon-lb)。 Mesos DNS是一个在Mesos之上运行的应用程序，它查询Mesos API以获取所有正在运行的任务和应用程序的列表。然后，它为运行这些任务的节点创建DNS记录。之后所有Mesos代理需要手动更新使用Mesos DNS服务作为其主DNS服务器。Mesos DNS使用主机名或IP地址用于Mesos agent向master主机注册，端口映射可以查询为SRV记录。Marathon DNS使用agent的主机名，并且必须确保主机网络相应端口打开且不能发生冲突。Mesos DNS确实提供了与众不同的方法来为状态负载持续引用，例如我们将能够使用Kubernetes pet sets。此外与Kubernetes有群集内任何容器可寻址的VIP机制不同，Mesos必须手动将\/etc\/resolve.conf更新到Mesos DNS服务器集，并在DNS服务器更改时更新配置。 Marathon-lb使用Marathon Event bus 跟踪所有服务的启动和撤销。然后，它在agent节点上启动HAProxy实例，以将流量中继到必需的服务节点。
+默认情况下，Mesos依赖于传统的Docker端口映射和外部服务发现和负载均衡机制。 而最近的测试版功能添加了使用基于DNS服务发现支持[Mesos DNS](http://mesosphere.github.io/mesos-dns/)或负载均衡使用[Marathon LB](https://github.com/mesosphere/marathon-lb)。 Mesos DNS是一个在Mesos之上运行的应用程序，它查询Mesos API以获取所有正在运行的任务和应用程序的列表。然后，它为运行这些任务的节点创建DNS记录。之后所有Mesos代理需要手动更新使用Mesos DNS服务器作为其主DNS服务器。Mesos DNS使用主机名或IP地址用于Mesos agent向master主机注册，端口映射可以查询为SRV记录。Marathon DNS使用agent的主机名，所以必须确保主机网络相应端口打开且不能发生冲突。Mesos DNS提供了与众不同的方法来为有状态负载引用，例如我们将能够结合使用Kubernetes pet sets。此外与Kubernetes有群集内任何容器可寻址的VIP机制不同，Mesos必须手动将\/etc\/resolve.conf更新到Mesos DNS服务器集，并在DNS服务器变更时需要更新配置。 Marathon-lb使用Marathon Event bus 跟踪所有服务的启动和撤销状态。然后它在agent节点上启动HAProxy实例，以将流量中继到必需的服务节点。
 
-马拉松（Marathon）的测试版支持[持久卷，](https://translate.googleusercontent.com/translate_c?depth=1&hl=en&rurl=translate.google.com.hk&sl=en&tl=zh-CN&u=https://mesosphere.github.io/marathon/docs/persistent-volumes.html&usg=ALkJrhhVPrswjgn73Z0dRgQI1pjxPoNTXQ)以外部持久性卷（[external persistent volumes](https://mesosphere.github.io/marathon/docs/external-volumes.html)） 。然而，这两个特征都处于非常原始的状态。持久卷只支持容器在单个节点上重新启动时支持持久化数据卷，但是会删除卷如果删除使用它们的应用，虽然磁盘上的实际数据不会被删除，volume必须手动删除。外部持久性卷的支持则限制在需要DC\/OS之上，并且当前只允许您的服务扩展到单个实例。
+马拉松（Marathon）的测试版支持[持久卷，](https://mesosphere.github.io/marathon/docs/external-volumes.html)以外部持久性卷（[external persistent volumes](https://mesosphere.github.io/marathon/docs/external-volumes.html)） 。然而，这两个特征都处于非常原始的状态。持久卷只支持容器在单个节点上重新启动时支持持久化数据卷，但是会删除卷如果删除使用它们的应用的时候，当然磁盘上的实际数据不会被删除，volume必须手动删除。外部持久性卷的支持则限制在必须在DC\/OS之上运行，并且当前只允许您的服务扩展到单个实例。
 
 ## 最终结论
 
