@@ -70,7 +70,7 @@ docker service update        \
 
 ```
 
-Docke 支持使用卷驱动\( volume drivers \)程序支持持久性外部卷，并且使用Native orchestration 为其service create命令扩展支持了使用mount选项。 将以下代码段添加到上面的命令将会将NFS挂载到您的容器中。请注意这需要在Docker外部的主机上已经设置好NFS，一些其他驱动程序添加了对Amazon EBS卷驱动程序或Google容器引擎卷驱动程序的支持能够在不需要主机支持的情况下工作。 此外，这个功能还没有很好的文档，可能需要一些测试并参考github issue以在docker项目得到运行。
+Docke 支持使用卷驱动\( volume drivers \)程序支持持久性卷挂载，并且使用Native orchestration 为其service create命令扩展支持了mount选项。 将以下代码段添加到上面的命令将会将NFS挂载到您的容器中。请注意这需要在Docker外部的主机上已经设置好NFS，一些其他驱动程序添加了对Amazon EBS卷驱动程序或Google容器引擎卷驱动程序的支持能够在不需要主机设置的情况下工作。 此外，这个因为这些功能还没有很好的文档，可能需要一些测试并参考github issue以在docker项目得到运行。
 
 ```
  --mount type=volume,src=/path/on/host,volume-driver=local,\
