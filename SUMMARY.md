@@ -14,4 +14,5 @@
 * [比较Rancher编排引擎选项](比较rancher编排引擎选项.md)
     * [translate](translate.md)
 * [WISE2C 容器化流程整理](wise2c-容器化流程整理.md)
+* [文档大钢整理](文档大钢整理.md)
 
