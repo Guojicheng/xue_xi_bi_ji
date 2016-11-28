@@ -11,16 +11,25 @@ The following table maps the most common [mongo](https://docs.mongodb.com/manual
 | show roles | db.getRoles\({showBuiltinRoles: **true**}\) |
 | show log &lt;logname&gt; | db.adminCommand\({ 'getLog' : '&lt;logname&gt;' }\) |
 | show logs | db.adminCommand\({ 'getLog' : '\*' }\) |
-| it | cursor = db.collection.find\(\)
+| it | cursor = db.collection.find\(\) |
+
 **if** \( cursor.hasNext\(\) \){
    cursor.next\(\);
-} |
+} \|
 
+密码设置后需要退出码设为
 
+0表示成功（Zero - Success）
 
+非0表示失败（Non-Zero - Failure）
 
+2表示用法不当（Incorrect Usage）
 
+127表示命令没有找到（Command Not Found）
 
+126表示不是可执行的（Not an executable）
+
+&gt;=128 信号产生
 
 Recently Rancher introduced the Rancher catalog, an awesome feature that enables Rancher users to one-click deploy common applications and complex services from catalog templates on your infrastructure, and Rancher will take care of creating and orchestrating the Docker containers for you.
 
