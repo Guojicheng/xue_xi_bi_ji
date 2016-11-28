@@ -13,9 +13,7 @@ The following table maps the most common [mongo](https://docs.mongodb.com/manual
 | show logs | db.adminCommand\({ 'getLog' : '\*' }\) |
 | it | cursor = db.collection.find\(\) |
 
-**if** \( cursor.hasNext\(\) \){
-   cursor.next\(\);
-} \|
+
 
 密码设置后需要退出码设为
 
