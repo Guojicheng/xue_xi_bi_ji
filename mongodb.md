@@ -2,8 +2,8 @@ ou **cannot** use any shell helper \(e.g. use &lt;dbname&gt;, show dbs, etc.\) i
 
 The following table maps the most common [mongo](https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo "mongo") shell helpers to their JavaScript equivalents.
 
-| hell HelpersJavaScript Equivalents |  |
-| --- | --- |
+| hell Helpers                                                                                                           JavaScript Equivale |
+| --- |
 | show dbs, show databases | db.adminCommand\('listDatabases'\) |
 | use &lt;db&gt; | db = db.getSiblingDB\('&lt;db&gt;'\) |
 | show collections | db.getCollectionNames\(\) |
@@ -12,8 +12,6 @@ The following table maps the most common [mongo](https://docs.mongodb.com/manual
 | show log &lt;logname&gt; | db.adminCommand\({ 'getLog' : '&lt;logname&gt;' }\) |
 | show logs | db.adminCommand\({ 'getLog' : '\*' }\) |
 | it | cursor = db.collection.find\(\) |
-
-
 
 密码设置后需要退出码设为
 
