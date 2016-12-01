@@ -15,4 +15,5 @@
     * [translate](translate.md)
 * [WISE2C 容器化流程整理](wise2c-容器化流程整理.md)
 * [文档大钢整理](文档大钢整理.md)
+* [rancher 平台部署环境总结之一（ELK stack\)](rancher-平台部署环境总结之一（elk-stack.md)
 
