@@ -6,10 +6,11 @@
 
 3. 遇到的问题
   加认证后，集群不成功（因地址变更或host文件变动导致） ， 用户创建集群失败，无法创建新的管理员及管理用户及密码（因为auth 强制要求用户登录必需要密码，而全局用户在集群启动前无权限创建新用户）
+
 4. 解决思路
 
   1 。 创建集群使用固定IP及主机名（rancher\)
-    2.     创建用户信息及保存用户密码之后再开启auth 及access control 。并保证重启服务后地址及host不变。
+   2.     创建用户信息及保存用户密码之后再开启auth 及access control 。并保证重启服务后地址及host不变。
 
   基本部署
 
@@ -87,74 +88,155 @@
 
   `CMD ["bash","/root/startmongo.sh"]`
 
-6.  第二步骤，使用rancher 平台启动，定制docker compose 固定ip ，分配主机名（感谢华相，alen\)
+6. 第二步骤，使用rancher 平台启动，定制docker compose 固定ip ，分配主机名（感谢华相，alen\)
   slave2:
 
-   image: yktmongo110
+  image: yktmongo110
 
-   hostname: slave2
+  hostname: slave2
 
-   container\_name: slave2
+  container\_name: slave2
 
-   extra\_hosts:
+  extra\_hosts:
 
-   - "mongodb:10.42.250.10"
+  * "mongodb:10.42.250.10"
 
-   - "slave2:10.42.250.11"
+  * "slave2:10.42.250.11"
 
-   - "slave1:10.42.250.12"
+  * "slave1:10.42.250.12"
 
-   labels:
 
-   - "io.rancher.container.requested\_ip=10.42.250.11"
+  labels:
+
+  * "io.rancher.container.requested\_ip=10.42.250.11"
 
   slave1:
 
-   image: yktmongo110
+  image: yktmongo110
 
-   hostname: slave1
+  hostname: slave1
 
-   container\_name: slave1
+  container\_name: slave1
 
-   extra\_hosts:
+  extra\_hosts:
 
-   - "mongodb:10.42.250.10"
+  * "mongodb:10.42.250.10"
 
-   - "slave2:10.42.250.11"
+  * "slave2:10.42.250.11"
 
-   - "slave1:10.42.250.12"
+  * "slave1:10.42.250.12"
 
-   labels:
 
-   - "io.rancher.container.requested\_ip=10.42.250.12"
+  labels:
+
+  * "io.rancher.container.requested\_ip=10.42.250.12"
 
   master:
 
-   image: yktmongo110
+  image: yktmongo110
 
-   hostname: master
+  hostname: master
 
-   environment:
+  environment:
 
-   ROLE: master
+  ROLE: master
 
-   SLAVE1: slave1
+  SLAVE1: slave1
 
-   SLAVE2: slave2
+  SLAVE2: slave2
 
-   container\_name: mongodb
+  container\_name: mongodb
 
-   extra\_hosts:
+  extra\_hosts:
 
-   - "mongodb:10.42.250.10"
+  * "mongodb:10.42.250.10"
 
-   - "slave2:10.42.250.11"
+  * "slave2:10.42.250.11"
 
-   - "slave1:10.42.250.12"
-
-   labels:
-
-   - "io.rancher.container.requested\_ip=10.42.250.10"
+  * "slave1:10.42.250.12"
 
 
+  labels:
+
+  * "io.rancher.container.requested\_ip=10.42.250.10"
+
+
+
+RANCHER-COMPOSE
+
+```
+  slave2:
+```
+
+ scale: 1
+
+slave1:
+
+ scale: 1
+
+mongodb:
+
+ scale: 1
+
+
+
+OK , 现在正常启动的， 我们先使用命令行，去验证用户及产生集群的脚本是否执行正确。
+
+首先，查看集群现在状态：
+
+`bash-4.1# /ykt/mongodb/bin/mongo --eval "rt.startSet()"`
+
+MongoDB shell version: 3.0.8
+
+connecting to: test
+
+2017-01-10T09:11:08.871+0800 E QUERY ReferenceError: rt is not defined
+
+ at \(shell eval\):1:1
+
+集群未定义， 现在创建集群：
+
+`bash-4.1# /ykt/mongodb/bin/mongo -eval "rs.initiate()"`
+
+MongoDB shell version: 3.0.8
+
+connecting to: test
+
+\[object Object\]
+
+不知道这个提示是否正常，也许集群是只有管理员可建 ？ 但登录验证已经有primay 的信息：
+
+第二步骤 ， 为集群加节点：
+
+
+
+` /ykt/mongodb/bin/mongo`
+
+`MongoDB shell version: 3.0.8`
+
+`connecting to: test`
+
+`Welcome to the MongoDB shell.`
+
+`For interactive help, type "help".`
+
+`For more comprehensive documentation, see`
+
+` http://docs.mongodb.org/`
+
+`Questions? Try the support group`
+
+` http://groups.google.com/group/mongodb-user`
+
+`Server has startup warnings:`
+
+`2017-01-10T09:05:07.030+0800 I CONTROL [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.`
+
+`2017-01-10T09:05:07.030+0800 I CONTROL [initandlisten]`
+
+`ykt:PRIMARY> use adminuse admin`
+
+`switched to db admin`
+
+`ykt:PRIMARY>`
 
