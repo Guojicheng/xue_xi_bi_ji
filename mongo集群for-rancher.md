@@ -10,7 +10,7 @@
 4. 解决思路
 
   1 。 创建集群使用固定IP及主机名（rancher\)
-   2.     创建用户信息及保存用户密码之后再开启auth 及access control 。并保证重启服务后地址及host不变。
+  2.     创建用户信息及保存用户密码之后再开启auth 及access control 。并保证重启服务后地址及host不变。
 
   基本部署
 
@@ -88,7 +88,60 @@
 
   `CMD ["bash","/root/startmongo.sh"]`
 
-6. 第二步骤，使用rancher 平台启动，定制docker compose 固定ip ，分配主机名（感谢华相，alen\)
+6. startmong.sh 脚本内容：
+  bash-4.1\# cat \/root\/startmongo.sh
+
+  \#\/ykt\/mongodb\/bin\/mongod --config \/ykt\/mongodb\/mongo.conf --smallfiles --nojournal
+
+  \#!\/bin\/bash
+
+  set -x
+
+  MONGO="\/ykt\/mongodb\/bin\/mongo"
+
+  MONGOD="\/ykt\/mongodb\/bin\/mongod"
+
+  $MONGOD --fork --config \/ykt\/mongodb\/mongo.conf --noprealloc --smallfiles
+
+  sleep 30
+
+  \#checkSlaveStatus\(\){
+
+  \#$MONGO --host slave1 --eval db
+
+  \#while \[ "$?" -ne 0 \]
+
+  \#do
+
+  \#echo "Waiting for slave to come up..."
+
+  \#sleep 15
+
+  \#$MONGO --host slave2 --eval db
+
+  \#done
+
+  \#}
+
+  if \[ "$ROLE" == "master" \]
+
+  then
+
+  $MONGO --eval "rs.initiate\(\)"
+
+  \#checkSlaveStatus
+
+  $MONGO --eval "rs.add\(\"slave1:27017\"\)"
+
+  $MONGO --eval "rs.add\(\"slave2:27017\"\)"
+
+  fi
+
+  tailf \/dev\/null
+
+
+
+1. 第二步骤，使用rancher 平台启动，定制docker compose 固定ip ，分配主机名（感谢华相，alen\)
   slave2:
 
   image: yktmongo110
@@ -106,9 +159,10 @@
   * "slave1:10.42.250.12"
 
 
-  labels:
 
-  * "io.rancher.container.requested\_ip=10.42.250.11"
+labels:
+
+* "io.rancher.container.requested\_ip=10.42.250.11"
 
   slave1:
 
@@ -120,16 +174,16 @@
 
   extra\_hosts:
 
-  * "mongodb:10.42.250.10"
+* "mongodb:10.42.250.10"
 
-  * "slave2:10.42.250.11"
+* "slave2:10.42.250.11"
 
-  * "slave1:10.42.250.12"
+* "slave1:10.42.250.12"
 
 
-  labels:
+labels:
 
-  * "io.rancher.container.requested\_ip=10.42.250.12"
+* "io.rancher.container.requested\_ip=10.42.250.12"
 
   master:
 
@@ -149,18 +203,16 @@
 
   extra\_hosts:
 
-  * "mongodb:10.42.250.10"
+* "mongodb:10.42.250.10"
 
-  * "slave2:10.42.250.11"
+* "slave2:10.42.250.11"
 
-  * "slave1:10.42.250.12"
-
-
-  labels:
-
-  * "io.rancher.container.requested\_ip=10.42.250.10"
+* "slave1:10.42.250.12"
 
 
+labels:
+
+* "io.rancher.container.requested\_ip=10.42.250.10"
 
 RANCHER-COMPOSE
 
@@ -168,17 +220,15 @@ RANCHER-COMPOSE
   slave2:
 ```
 
- scale: 1
+scale: 1
 
 slave1:
 
- scale: 1
+scale: 1
 
 mongodb:
 
- scale: 1
-
-
+scale: 1
 
 OK , 现在正常启动的， 我们先使用命令行，去验证用户及产生集群的脚本是否执行正确。
 
@@ -192,7 +242,7 @@ connecting to: test
 
 2017-01-10T09:11:08.871+0800 E QUERY ReferenceError: rt is not defined
 
- at \(shell eval\):1:1
+at \(shell eval\):1:1
 
 集群未定义， 现在创建集群：
 
@@ -208,9 +258,7 @@ connecting to: test
 
 第二步骤 ， 为集群加节点：
 
-
-
-` /ykt/mongodb/bin/mongo`
+`/ykt/mongodb/bin/mongo`
 
 `MongoDB shell version: 3.0.8`
 
@@ -222,11 +270,11 @@ connecting to: test
 
 `For more comprehensive documentation, see`
 
-` http://docs.mongodb.org/`
+`http://docs.mongodb.org/`
 
 `Questions? Try the support group`
 
-` http://groups.google.com/group/mongodb-user`
+`http://groups.google.com/group/mongodb-user`
 
 `Server has startup warnings:`
 
