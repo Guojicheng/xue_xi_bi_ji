@@ -1,7 +1,8 @@
-1. 集群使用centos 5.6   \(redhat 6.4  ssl 包有问题\)
+1. ### 集群使用centos 5.6   \(redhat 6.4  ssl 包有问题\)
 
-2. 需求： 
-  加访问控制  keyfile  及密码 认证  auth
+2. ### 需求：
+
+  ### 加访问控制  keyfile  及密码 认证  auth
   一键部署
 
 3. 遇到的问题
@@ -101,7 +102,7 @@
 
   MONGOD="\/ykt\/mongodb\/bin\/mongod"
 
-  $MONGOD --fork --config \/ykt\/mongodb\/mongo.conf --noprealloc --smallfiles
+  $MONGOD --fork --config \/ykt\/mongodb\/mongo.conf  --smallfiles
 
   sleep 30
 
@@ -138,7 +139,6 @@
   fi
 
   tailf \/dev\/null
-
 
 
 1. 第二步骤，使用rancher 平台启动，定制docker compose 固定ip ，分配主机名（感谢华相，alen\)
@@ -287,4 +287,84 @@ connecting to: test
 `switched to db admin`
 
 `ykt:PRIMARY>`
+
+
+
+加用户，密码：admin 及云课堂
+
+ykt:PRIMARY&gt; db.system.users.find\(\);db.system.users.find\(\);
+
+{ "\_id" : "admin.admin", "user" : "admin", "db" : "admin", "credentials" : { "SCRAM-SHA-1" : { "iterationCount" : 10000, "salt" : "BV6cF37g6Ru9mF\/aSk\/MWA==", "storedKey" : "FduMXysdiim2A2o6m02OBzJ6oQg=", "serverKey" : "hJP9p3KU8hRp\/w9g1DhzfvS\/Vi4=" } }, "roles" : \[ { "role" : "userAdminAnyDatabase", "db" : "admin" } \] }
+
+{ "\_id" : "ykt.ykt", "user" : "ykt", "db" : "ykt", "credentials" : { "SCRAM-SHA-1" : { "iterationCount" : 10000, "salt" : "gGVPoj7w8fSmL1srfNXeYQ==", "storedKey" : "9MVDNwKjkcTMVi7JnXFxtn0vlAE=", "serverKey" : "y4NnkiwEmco7PyUUpvbdg0IVctw=" } }, "roles" : \[ { "role" : "dbOwner", "db" : "yunketang" } \] }
+
+
+
+设置认证：
+
+
+
+重启stack 验证：
+
+_**变为salev2 为primary   （可能与启动顺序有关）**_
+
+bash-4.1\# \/ykt\/mongodb\/bin\/mongo localhost:27017\/admin -u admin -p kYbB66ubZNYGmRuH
+
+MongoDB shell version: 3.0.8
+
+connecting to: localhost:27017\/admin
+
+ykt:PRIMARY&gt;
+
+
+
+重新commit 镜像：
+
+abdbc6d5d202 yktmongo110:latest "bash \/root\/startmong" About an hour ago Up 7 minutes 27017\/tcp, 28017\/tcp r-ykt110\_mongodb\_1
+
+578651481be9 yktmongo110:latest "bash \/root\/startmong" About an hour ago Up 7 minutes 27017\/tcp, 28017\/tcp r-ykt110\_slave2\_1
+
+d7bcae4b6b31 yktmongo110:latest "bash \/root\/startmong" About an hour ago Up 7 minutes 27017\/tcp, 28017\/tcp r-ykt110\_slave1\_1
+
+
+
+\[root@computer1 testcluster110\]\# docker commit abdbc6d5d202 yktmongo110:1
+
+sha256:18d01395dc16f6c476c1627cbf5dfc7e154d1cf140990eb3f952582b30c89a67
+
+\[root@computer1 testcluster110\]\# docker commit 578651481be9 yktmongo110slave2:1
+
+sha256:8a78563c5582b854425da98f748e153711159c8913b3249dc73841b601f9222d
+
+\[root@computer1 testcluster110\]\# docker commit d7bcae4b6b31 yktmongo110slave1:1
+
+sha256:e41f94b5b9cb62deb80f25f28d9b439576b76b35c3d3897ee7b80c58e7fe7c98
+
+
+
+
+
+变更rancher compose 编排：
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
