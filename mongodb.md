@@ -2,8 +2,8 @@ ou **cannot** use any shell helper \(e.g. use &lt;dbname&gt;, show dbs, etc.\) i
 
 The following table maps the most common [mongo](https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo "mongo") shell helpers to their JavaScript equivalents.
 
-| hell Helpers                                                                                                           JavaScript Equivale |
-| --- |
+|  | hell Helpers                                                                                                           JavaScript Equivale |
+| :--- | :--- |
 | show dbs, show databases | db.adminCommand\('listDatabases'\) |
 | use &lt;db&gt; | db = db.getSiblingDB\('&lt;db&gt;'\) |
 | show collections | db.getCollectionNames\(\) |
