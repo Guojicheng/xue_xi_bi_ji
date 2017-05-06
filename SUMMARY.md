@@ -16,4 +16,5 @@
 * [rancher 平台部署环境总结之一（ELK stack\)](rancher-平台部署环境总结之一（elk-stack.md)
 * [mongo集群for rancher](mongo集群for-rancher.md)
 * [离线ubuntu 生产环境配置手册 ](li-xian-ubuntu-sheng-chan-huan-jing-pei-zhi-shou-ce.md)
+* [README.md](readmemd.md)
 
